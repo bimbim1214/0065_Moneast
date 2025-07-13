@@ -10,6 +10,10 @@ class PembelianResponseModel {
     final String? namaBuah;
     final String? namaSupplier;
 
+    // Local field, tidak dari backend
+  final int total;
+
+
     PembelianResponseModel({
         this.id,
         this.buahId,
@@ -19,22 +23,28 @@ class PembelianResponseModel {
         this.tanggal,
         this.namaBuah,
         this.namaSupplier,
+        required this.total,
     });
 
     factory PembelianResponseModel.fromJson(String str) => PembelianResponseModel.fromMap(json.decode(str));
 
     String toJson() => json.encode(toMap());
 
-    factory PembelianResponseModel.fromMap(Map<String, dynamic> json) => PembelianResponseModel(
-        id: json["id"],
-        buahId: json["buah_id"],
-        supplierId: json["supplier_id"],
-        jumlah: json["jumlah"],
-        harga: json["harga"],
-        tanggal: json["tanggal"] == null ? null : DateTime.parse(json["tanggal"]),
-        namaBuah: json["nama_buah"],
-        namaSupplier: json["nama_supplier"],
+    factory PembelianResponseModel.fromMap(Map<String, dynamic> json) {
+    final jumlah = json['jumlah'] ?? 0;
+    final harga = json['harga'] ?? 0;
+    return PembelianResponseModel(
+      id: json['id'],
+      buahId: json['buah_id'],
+      namaBuah: json['nama_buah'],
+      supplierId: json['supplier_id'],
+      namaSupplier: json['nama_supplier'],
+      jumlah: jumlah,
+      harga: harga,
+      tanggal: json["tanggal"] == null ? null : DateTime.parse(json["tanggal"]),
+      total: jumlah * harga, // hitung total langsung di sini
     );
+  }
 
     Map<String, dynamic> toMap() => {
         "id": id,
@@ -46,4 +56,5 @@ class PembelianResponseModel {
         "nama_buah": namaBuah,
         "nama_supplier": namaSupplier,
     };
+    
 }
