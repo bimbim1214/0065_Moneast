@@ -13,14 +13,14 @@ class BuahRepository {
   BuahRepository(this._serviceHttpClient);
 
   /// GET: Ambil semua buah
-  Future<Either<String, List<BuahResponseModel>>> getAllBuah() async {
+  Future<Either<String, List<BuahResponsesModel>>> getAllBuah() async {
     try {
       final response = await _serviceHttpClient.get("buah");
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = json.decode(response.body);
         final listBuah =
-            jsonResponse.map((e) => BuahResponseModel.fromMap(e)).toList();
+            jsonResponse.map((e) => BuahResponsesModel.fromMap(e)).toList();
         return Right(listBuah);
       } else {
         final error = json.decode(response.body);
@@ -32,7 +32,7 @@ class BuahRepository {
   }
 
   /// POST: Tambah buah baru
-  Future<Either<String, BuahResponseModel>> addBuah(
+  Future<Either<String, BuahResponsesModel>> addBuah(
     BuahRequestModel requestModel,
   ) async {
     try {
@@ -43,7 +43,7 @@ class BuahRepository {
 
       if (response.statusCode == 201) {
         final jsonResponse = json.decode(response.body);
-        final buah = BuahResponseModel.fromMap(jsonResponse);
+        final buah = BuahResponsesModel.fromMap(jsonResponse);
         return Right(buah);
       } else {
         final error = json.decode(response.body);
@@ -55,13 +55,13 @@ class BuahRepository {
   }
 
   /// GET: Detail buah tertentu
-  Future<Either<String, BuahResponseModel>> getBuahById(int id) async {
+  Future<Either<String, BuahResponsesModel>> getBuahById(int id) async {
     try {
       final response = await _serviceHttpClient.get("buah/$id");
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        return Right(BuahResponseModel.fromMap(jsonResponse));
+        return Right(BuahResponsesModel.fromMap(jsonResponse));
       } else {
         final error = json.decode(response.body);
         return Left(error['message'] ?? 'Buah tidak ditemukan');
@@ -72,7 +72,7 @@ class BuahRepository {
   }
 
   /// PUT: Update buah
-  Future<Either<String, BuahResponseModel>> updateBuah(
+  Future<Either<String, BuahResponsesModel>> updateBuah(
     int id,
     BuahRequestModel requestModel,
   ) async {
@@ -85,7 +85,7 @@ class BuahRepository {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        return Right(BuahResponseModel.fromMap(jsonResponse));
+        return Right(BuahResponsesModel.fromMap(jsonResponse));
       } else {
         final error = json.decode(response.body);
         return Left(error['message'] ?? 'Gagal update buah');
