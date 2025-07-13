@@ -4,10 +4,12 @@ import 'package:pamfix/data/repository/auth_repository.dart';
 import 'package:pamfix/data/repository/buah_repository.dart';
 import 'package:pamfix/data/repository/kategori_buah_repository.dart';
 import 'package:pamfix/data/repository/pembelian_repository.dart';
+import 'package:pamfix/data/repository/penjualan_repository.dart';
 import 'package:pamfix/data/repository/supplier_repository.dart';
 import 'package:pamfix/presentation/auth/bloc/kategori/kategori_bloc.dart';
 import 'package:pamfix/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:pamfix/presentation/auth/bloc/pembelian/pembelian_bloc.dart';
+import 'package:pamfix/presentation/auth/bloc/penjualan/penjualan_bloc.dart';
 import 'package:pamfix/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:pamfix/presentation/auth/bloc/supplier/supplier_bloc.dart';
 import 'package:pamfix/presentation/auth/buah_screen.dart';
@@ -55,6 +57,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => 
           PembelianBloc(pembelianRepository: PembelianRepository(ServiceHttpClient())),
+        ),
+        BlocProvider(
+          create: (context) => 
+          PenjualanBloc(penjualanRepository: PenjualanRepository(ServiceHttpClient())),
         ),
       ],
       child: MaterialApp(
