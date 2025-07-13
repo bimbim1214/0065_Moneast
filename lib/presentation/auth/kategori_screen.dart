@@ -28,17 +28,23 @@ class _KategoriScreenState extends State<KategoriScreen> {
         title: Text(id == null ? "Tambah Kategori" : "Edit Kategori"),
         content: TextField(
           controller: _namaKategoriController,
-          decoration: const InputDecoration(hintText: "Nama Kategori"),
+          decoration: const InputDecoration(
+            labelText: "Nama Kategori",
+            border: OutlineInputBorder(),
+          ),
         ),
         actions: [
-          TextButton(
+          OutlinedButton(
             onPressed: () {
               _namaKategoriController.clear();
               Navigator.pop(context);
             },
             child: const Text("Batal"),
           ),
-          ElevatedButton(
+          ElevatedButton.icon(
+            icon: const Icon(Icons.save),
+            label: const Text("Simpan"),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             onPressed: () {
               final kategori = KategoriRequestModel(
                 namaKategori: _namaKategoriController.text,
@@ -53,7 +59,6 @@ class _KategoriScreenState extends State<KategoriScreen> {
               _namaKategoriController.clear();
               Navigator.pop(context);
             },
-            child: const Text("Simpan"),
           ),
         ],
       ),
@@ -67,16 +72,18 @@ class _KategoriScreenState extends State<KategoriScreen> {
         title: const Text("Hapus Kategori"),
         content: const Text("Apakah Anda yakin ingin menghapus kategori ini?"),
         actions: [
-          TextButton(
+          OutlinedButton(
             onPressed: () => Navigator.pop(context),
             child: const Text("Batal"),
           ),
-          ElevatedButton(
+          ElevatedButton.icon(
+            icon: const Icon(Icons.delete),
+            label: const Text("Hapus"),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () {
               context.read<KategoriBloc>().add(DeleteKategoriEvent(id: id));
               Navigator.pop(context);
             },
-            child: const Text("Hapus"),
           ),
         ],
       ),
@@ -86,10 +93,15 @@ class _KategoriScreenState extends State<KategoriScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Kategori Buah")),
-      floatingActionButton: FloatingActionButton(
+      appBar: AppBar(
+        title: const Text("Kategori Buah"),
+        backgroundColor: Colors.green[800],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.green,
         onPressed: () => _showKategoriDialog(),
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text("Tambah"),
       ),
       body: BlocBuilder<KategoriBloc, KategoriState>(
         builder: (context, state) {
@@ -102,28 +114,41 @@ class _KategoriScreenState extends State<KategoriScreen> {
               return const Center(child: Text("Belum ada kategori."));
             }
 
-            return ListView.builder(
+            return ListView.separated(
+              padding: const EdgeInsets.all(16),
               itemCount: state.listKategori.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final kategori = state.listKategori[index];
-                return ListTile(
-                  title: Text(kategori.namaKategori ?? '-'),
-                  subtitle: Text("ID: ${kategori.id}"),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () => _showKategoriDialog(
-                          id: kategori.id,
-                          currentName: kategori.namaKategori,
+                return Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 3,
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      backgroundColor: Colors.green,
+                      child: Icon(Icons.category, color: Colors.white),
+                    ),
+                    title: Text(
+                      kategori.namaKategori ?? '-',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text("ID: ${kategori.id}"),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.blue),
+                          onPressed: () => _showKategoriDialog(
+                            id: kategori.id,
+                            currentName: kategori.namaKategori,
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => _showDeleteDialog(kategori.id!),
-                      ),
-                    ],
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _showDeleteDialog(kategori.id!),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
