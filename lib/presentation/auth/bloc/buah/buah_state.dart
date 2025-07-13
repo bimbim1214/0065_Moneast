@@ -7,13 +7,8 @@ class BuahInitial extends BuahState {}
 class BuahLoading extends BuahState {}
 
 class BuahSuccess extends BuahState {
-  final List<BuahResponseModel> listBuah;
+  final List<BuahResponsesModel> listBuah;
   BuahSuccess({required this.listBuah});
-}
-
-class BuahSingleSuccess extends BuahState {
-  final BuahResponseModel buah;
-  BuahSingleSuccess({required this.buah});
 }
 
 class BuahFailure extends BuahState {
